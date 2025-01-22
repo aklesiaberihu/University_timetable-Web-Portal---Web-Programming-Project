@@ -8,7 +8,7 @@ CREATE TABLE Users (
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    last_login TIMESTAMP,
+    last_login TIMESTAMP NULL DEFAULT NULL,
     is_active BOOLEAN DEFAULT TRUE
 );
 
@@ -156,3 +156,84 @@ CHECK (end_date >= start_date);
 ALTER TABLE AcademicTerms
 ADD CONSTRAINT check_term_dates 
 CHECK (end_date >= start_date);
+
+
+-- Populate Users
+INSERT INTO Users (username, password_hash, email, role, first_name, last_name)
+VALUES
+('admin1', 'hashed_password_1', 'admin1@university.com', 'admin', 'Admin', 'User'),
+('faculty1', 'hashed_password_2', 'faculty1@university.com', 'faculty', 'John', 'Doe'),
+('faculty2', 'hashed_password_3', 'faculty2@university.com', 'faculty', 'Jane', 'Smith'),
+('student1', 'hashed_password_4', 'student1@university.com', 'student', 'Alice', 'Brown'),
+('student2', 'hashed_password_5', 'student2@university.com', 'student', 'Bob', 'White');
+
+-- Populate Faculties
+INSERT INTO Faculties (faculty_name, description)
+VALUES
+('Faculty of Science', 'Covers various scientific disciplines'),
+('Faculty of Arts', 'Focuses on humanities and social sciences');
+
+-- Populate Departments
+INSERT INTO Departments (faculty_id, department_name, description)
+VALUES
+(1, 'Department of Computer Science', 'Focuses on software development and computer systems'),
+(1, 'Department of Physics', 'Covers theoretical and experimental physics'),
+(2, 'Department of History', 'Studies ancient and modern history'),
+(2, 'Department of Literature', 'Explores classical and contemporary literature');
+
+-- Populate Rooms
+INSERT INTO Rooms (room_number, building, floor, capacity, room_type, has_projector, has_whiteboard, has_computer, is_accessible)
+VALUES
+('101', 'Science Building', 1, 50, 'lecture_hall', TRUE, TRUE, FALSE, TRUE),
+('202', 'Arts Building', 2, 30, 'classroom', FALSE, TRUE, FALSE, TRUE),
+('303', 'Technology Building', 3, 25, 'lab', TRUE, TRUE, TRUE, FALSE),
+('404', 'Seminar Hall', 4, 100, 'seminar_room', TRUE, TRUE, FALSE, TRUE);
+
+-- Populate Courses
+INSERT INTO Courses (department_id, course_code, course_name, description, credits, level)
+VALUES
+(1, 'CS101', 'Introduction to Programming', 'Learn the basics of programming using Python', 3, 'undergraduate'),
+(1, 'CS201', 'Data Structures', 'Study various data structures and their applications', 4, 'undergraduate'),
+(3, 'HIS101', 'World History', 'Overview of world history from ancient to modern times', 3, 'undergraduate'),
+(4, 'LIT201', 'Modern Literature', 'Explore literature from the 20th century onward', 3, 'graduate');
+
+-- Populate Academic Terms
+INSERT INTO AcademicTerms (term_name, start_date, end_date, is_active)
+VALUES
+('Fall 2025', '2025-09-01', '2025-12-15', TRUE),
+('Spring 2026', '2026-01-15', '2026-05-01', FALSE);
+
+-- Populate Course Offerings
+INSERT INTO CourseOfferings (course_id, term_id, instructor_id, max_students, status)
+VALUES
+(1, 1, 2, 40, 'scheduled'),
+(2, 1, 3, 30, 'scheduled'),
+(3, 1, 2, 25, 'scheduled');
+
+-- Populate Time Slots
+INSERT INTO TimeSlots (day_of_week, start_time, end_time)
+VALUES
+('Monday', '09:00:00', '10:30:00'),
+('Wednesday', '09:00:00', '10:30:00'),
+('Tuesday', '11:00:00', '12:30:00'),
+('Thursday', '14:00:00', '15:30:00');
+
+-- Populate Class Schedule
+INSERT INTO ClassSchedule (offering_id, room_id, slot_id, recurring, start_date, end_date, created_by)
+VALUES
+(1, 1, 1, TRUE, '2025-09-01', '2025-12-15', 1),
+(2, 2, 3, TRUE, '2025-09-01', '2025-12-15', 1),
+(3, 3, 4, TRUE, '2025-09-01', '2025-12-15', 1);
+
+-- Populate Student Enrollments
+INSERT INTO StudentEnrollments (student_id, offering_id, status)
+VALUES
+(4, 1, 'enrolled'),
+(5, 1, 'enrolled'),
+(4, 2, 'enrolled');
+
+-- Populate Schedule Changes Log
+INSERT INTO ScheduleChangesLog (schedule_id, changed_by, change_type, change_description)
+VALUES
+(1, 1, 'created', 'Initial schedule created for CS101'),
+(2, 1, 'created', 'Initial schedule created for CS201');
